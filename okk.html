@@ -21,6 +21,7 @@
       margin: 10px 0;
     }
     textarea {
+      resize: both;
       width: 100%;
       resize: vertical;
       min-height: 60px;
@@ -50,8 +51,8 @@
     </div>
 
     <div id="content" style="display: none;">
-      <label for="filter">🔍 Пошук за номером замовлення:</label>
-      <input type="text" id="filter" oninput="filterTable()" placeholder="Введіть номер замовлення...">
+      <label for="filter">🔍 Пошук за клієнтом:</label>
+      <input type="text" id="filter" oninput="filterTable()" placeholder="Введіть ім’я клієнта...">
 
       <h2>Всі скарги:</h2>
       <table id="complaintsTable" border="1" cellspacing="0" cellpadding="8">
@@ -118,7 +119,7 @@
       const filterValue = document.getElementById("filter").value.trim().toLowerCase();
       const rows = document.querySelectorAll("#complaintsTable tbody tr");
       rows.forEach(row => {
-        const orderCell = row.children[1]; // Номер замовлення у другій колонці
+        const orderCell = row.children[3]; // Клієнт у 4-й колонці
         const text = orderCell.textContent.toLowerCase();
         row.style.display = text.includes(filterValue) ? "" : "none";
       });
