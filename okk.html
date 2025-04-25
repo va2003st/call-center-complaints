@@ -2,10 +2,10 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Скарги для ОКК</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <style>
     #login-box {
       max-width: 400px;
@@ -21,10 +21,9 @@
       margin: 10px 0;
     }
     textarea {
-      resize: both;
       width: 100%;
-      resize: vertical;
       min-height: 60px;
+      resize: both;
       margin-top: 5px;
     }
     select {
@@ -44,29 +43,31 @@
   <main>
     <div id="login-box">
       <h3>Вхід для ОКК</h3>
-      <input type="text" id="login" placeholder="Логін">
-      <input type="password" id="password" placeholder="Пароль">
+      <input type="text" id="login" placeholder="Логін" />
+      <input type="password" id="password" placeholder="Пароль" />
       <button onclick="checkLogin()">Увійти</button>
       <p id="error" style="color: red;"></p>
     </div>
 
     <div id="content" style="display: none;">
       <label for="filter">🔍 Пошук за клієнтом:</label>
-      <input type="text" id="filter" oninput="filterTable()" placeholder="Введіть ім’я клієнта...">
-
+      <input type="text" id="filter" oninput="filterTable()" placeholder="Введіть ім’я клієнта..." />
       <h2>Всі скарги:</h2>
       <table id="complaintsTable" border="1" cellspacing="0" cellpadding="8">
         <thead>
           <tr>
             <th>Дата</th><th>Замовлення</th><th>Склад</th><th>Клієнт</th>
-            <th>Категорія (ред.)</th><th>Статус</th><th>Претензія</th><th>Надання ЗЗ</th><th>Статус</th><th>Коментар менеджера</th><th>Зберегти</th>
+            <th>Категорія (ред.)</th><th>Статус</th><th>Претензія</th><th>Надання ЗЗ</th>
+            <th>Коментар менеджера</th><th>Зберегти</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
     </div>
   </main>
-  <footer><p>Створено за допомогою <a href="https://gptonline.ai/">GPTonline.ai</a></p></footer>
+  <footer>
+    <p>Створено за допомогою <a href="https://gptonline.ai/">GPTonline.ai</a></p>
+  </footer>
 
   <script>
     function checkLogin() {
@@ -105,52 +106,55 @@
               <option ${d.category === "Інше" ? "selected" : ""}>Інше</option>
             </select>
           </td>
+          <td>
+            <select id="status-${i}" onchange="updateStatusColor(this)">
+              <option ${d.status === "Відкрита" ? "selected" : ""}>Відкрита</option>
+              <option ${d.status === "В розробці" ? "selected" : ""}>В розробці</option>
+              <option ${d.status === "Закрита" ? "selected" : ""}>Закрита</option>
+              <option ${d.status === "Очікування ЗЗ" ? "selected" : ""}>Очікування ЗЗ</option>
+              <option ${d.status === "ЗЗ наданий" ? "selected" : ""}>ЗЗ наданий</option>
+              <option ${d.status === "На розгляді" ? "selected" : ""}>На розгляді</option>
+              <option ${d.status === "Розглянуто" ? "selected" : ""}>Розглянуто</option>
+              <option ${d.status === "Очікування ЗЗ від КРо" ? "selected" : ""}>Очікування ЗЗ від КРо</option>
+              <option ${d.status === "Розглянути повторно" ? "selected" : ""}>Розглянути повторно</option>
+            </select>
+          </td>
           <td><textarea readonly>${d.claim}</textarea></td>
           <td><textarea readonly>${d.zz}</textarea></td>
           <td><textarea id="comment-${i}">${d.managerComment || ""}</textarea></td>
           <td><button onclick="saveUpdate(${i})">💾</button></td>
         `;
+
         tbody.appendChild(row);
+        updateStatusColor(document.getElementById(`status-${i}`));
       });
-    }
-
-    
-    function filterTable() {
-      const filterValue = document.getElementById("filter").value.trim().toLowerCase();
-      const rows = document.querySelectorAll("#complaintsTable tbody tr");
-      rows.forEach(row => {
-        const orderCell = row.children[3]; // Клієнт у 4-й колонці
-        const text = orderCell.textContent.toLowerCase();
-        row.style.display = text.includes(filterValue) ? "" : "none";
-      });
-    }
-
-    
-    function updateStatusColor(select) {
-      if (select.value === "Закрита") {
-        select.style.backgroundColor = "#c4f0c5"; // зелений
-      } else {
-        select.style.backgroundColor = "";
-      }
-    }
-
-    
-    function updateStatusColor(select) {
-      if (select.value === "Закрита") {
-        select.style.backgroundColor = "#c4f0c5";
-      } else {
-        select.style.backgroundColor = "";
-      }
     }
 
     function saveUpdate(index) {
       const data = JSON.parse(localStorage.getItem("complaints") || "[]");
       data[index].category = document.getElementById(`category-${index}`).value;
       data[index].status = document.getElementById(`status-${index}`).value;
-      data[index].status = document.getElementById(`status-${index}`).value;
       data[index].managerComment = document.getElementById(`comment-${index}`).value;
       localStorage.setItem("complaints", JSON.stringify(data));
       alert("Зміни збережено!");
+    }
+
+    function filterTable() {
+      const filterValue = document.getElementById("filter").value.trim().toLowerCase();
+      const rows = document.querySelectorAll("#complaintsTable tbody tr");
+      rows.forEach(row => {
+        const clientCell = row.children[3];
+        const text = clientCell.textContent.toLowerCase();
+        row.style.display = text.includes(filterValue) ? "" : "none";
+      });
+    }
+
+    function updateStatusColor(select) {
+      if (select.value === "Закрита") {
+        select.style.backgroundColor = "#c4f0c5";
+      } else {
+        select.style.backgroundColor = "";
+      }
     }
   </script>
 </body>
