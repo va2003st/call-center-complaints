@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -5,40 +6,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Скарги для ОКК</title>
   <link rel="stylesheet" href="style.css">
-  <script>
-    if (localStorage.getItem("theme") === "dark") {
-      document.documentElement.classList.add("dark");
-    }
-  </script>
 </head>
 <body>
   <header>
     <h1>Скарги для ОКК</h1>
     <nav class="navbar">
       <a class="nav-btn" href="index.html">Головна</a>
-      <a class="nav-btn" href="about.html">Про нас</a>
       <a class="nav-btn" href="complaints.html">Скарги</a>
-      <a class="nav-btn" href="stats.html">Аналітика</a>
-      <a class="nav-btn" href="results.html">Результати</a>
-      <a class="nav-btn" href="resources.html">Ресурси</a>
       <a class="nav-btn" href="okk.html">ОКК</a>
-      <button id="themeToggle" class="theme-toggle">🌙 Тема</button>
     </nav>
   </header>
   <main>
-    <p>Тут ви бачите всі скарги, надіслані через форму:</p>
-    <iframe src="https://docs.google.com/spreadsheets/d/e/ВАШ_ТАБЛИЦЯ/pubhtml?gid=0&single=true&widget=true&headers=false" width="100%" height="700"></iframe>
+    <table id="complaintsTable" border="1" cellspacing="0" cellpadding="8">
+      <thead>
+        <tr>
+          <th>Дата</th><th>Замовлення</th><th>Склад</th><th>Клієнт</th>
+          <th>Категорія</th><th>Претензія</th><th>Надання ЗЗ</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </main>
-  <footer>
-    <p>&copy; 2025 Відділ контролю якості. Створено за допомогою <a href="https://gptonline.ai/">GPTonline.ai</a></p>
-  </footer>
+  <footer><p>Створено за допомогою <a href="https://gptonline.ai/">GPTonline.ai</a></p></footer>
   <script>
-    const toggle = document.getElementById("themeToggle");
-    toggle.onclick = () => {
-      document.documentElement.classList.toggle("dark");
-      localStorage.setItem("theme",
-        document.documentElement.classList.contains("dark") ? "dark" : "light");
-    };
+    const data = JSON.parse(localStorage.getItem("complaints") || "[]");
+    const tbody = document.querySelector("#complaintsTable tbody");
+    data.forEach(d => {{
+      const row = `<tr>
+        <td>${{d.date}}</td><td>${{d.order}}</td><td>${{d.warehouse}}</td>
+        <td>${{d.client}}</td><td>${{d.category}}</td><td>${{d.claim}}</td><td>${{d.zz}}</td>
+      </tr>`;
+      tbody.innerHTML += row;
+    }});
   </script>
 </body>
 </html>

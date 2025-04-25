@@ -1,44 +1,68 @@
+
 <!DOCTYPE html>
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Скарги</title>
+  <title>Залишити скаргу</title>
   <link rel="stylesheet" href="style.css">
-  <script>
-    if (localStorage.getItem("theme") === "dark") {
-      document.documentElement.classList.add("dark");
-    }
-  </script>
 </head>
 <body>
   <header>
     <h1>Залишити скаргу</h1>
     <nav class="navbar">
       <a class="nav-btn" href="index.html">Головна</a>
-      <a class="nav-btn" href="about.html">Про нас</a>
       <a class="nav-btn" href="complaints.html">Скарги</a>
-      <a class="nav-btn" href="stats.html">Аналітика</a>
-      <a class="nav-btn" href="results.html">Результати</a>
-      <a class="nav-btn" href="resources.html">Ресурси</a>
       <a class="nav-btn" href="okk.html">ОКК</a>
-      <button id="themeToggle" class="theme-toggle">🌙 Тема</button>
     </nav>
   </header>
   <main>
-    <p>Заповніть форму нижче для подання скарги:</p>
-    <iframe src="https://docs.google.com/forms/d/e/ВАШ_ФОРМ/embed?hl=uk" width="100%" height="900" frameborder="0" marginheight="0" marginwidth="0">Завантаження…</iframe>
+    <form id="complaintForm">
+      <label>Дата:</label>
+      <input type="date" id="date" required>
+      <label>Номер замовлення:</label>
+      <input type="text" id="order" required>
+      <label>Склад:</label>
+      <input type="text" id="warehouse" required>
+      <label>Клієнт:</label>
+      <input type="text" id="client" required>
+      <label>Категорія скарги:</label>
+      <select id="category" required>
+        <option>Скарга на якість</option>
+        <option>Скарга на кур'єра</option>
+        <option>Скарга на КЦ</option>
+        <option>Скарга на комплектацію</option>
+        <option>Скарга на сервіс</option>
+        <option>Скарга на отруєння</option>
+        <option>Повернення ГК</option>
+        <option>Інше</option>
+      </select>
+      <label>Претензія:</label>
+      <textarea id="claim" required></textarea>
+      <label>Надання ЗЗ:</label>
+      <textarea id="zz" required></textarea>
+      <button type="submit">Надіслати</button>
+    </form>
   </main>
-  <footer>
-    <p>&copy; 2025 Відділ контролю якості. Створено за допомогою <a href="https://gptonline.ai/">GPTonline.ai</a></p>
-  </footer>
+  <footer><p>Створено за допомогою <a href="https://gptonline.ai/">GPTonline.ai</a></p></footer>
   <script>
-    const toggle = document.getElementById("themeToggle");
-    toggle.onclick = () => {
-      document.documentElement.classList.toggle("dark");
-      localStorage.setItem("theme",
-        document.documentElement.classList.contains("dark") ? "dark" : "light");
-    };
+    document.getElementById("complaintForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const data = {
+        date: document.getElementById("date").value,
+        order: document.getElementById("order").value,
+        warehouse: document.getElementById("warehouse").value,
+        client: document.getElementById("client").value,
+        category: document.getElementById("category").value,
+        claim: document.getElementById("claim").value,
+        zz: document.getElementById("zz").value
+      };
+      const existing = JSON.parse(localStorage.getItem("complaints") || "[]");
+      existing.push(data);
+      localStorage.setItem("complaints", JSON.stringify(existing));
+      alert("Скаргу збережено! Перейдіть у розділ ОКК для перегляду.");
+      this.reset();
+    });
   </script>
 </body>
 </html>
