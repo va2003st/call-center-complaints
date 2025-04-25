@@ -2,28 +2,119 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <title>ОКК — Скарги</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Скарги для ОКК</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    textarea { resize: both; width: 100%; min-height: 80px; }
+    select, input[type="text"] { width: 100%; }
+  </style>
 </head>
 <body>
-  <h1>Скарги для ОКК</h1>
-  <label for="filter">🔍 Пошук за клієнтом:</label>
-  <input type="text" id="filter" oninput="filterTable()" placeholder="Введіть ім’я клієнта...">
+  <header>
+    <h1>Скарги для ОКК</h1>
+    <nav class="navbar">
+      <a class="nav-btn" href="index.html">Головна</a>
+      <a class="nav-btn" href="complaints.html">Скарги</a>
+      <a class="nav-btn" href="okk.html">ОКК</a>
+    </nav>
+  </header>
+  <main>
+    <div id="login-box">
+      <h3>Вхід для ОКК</h3>
+      <input type="text" id="login" placeholder="Логін">
+      <input type="password" id="password" placeholder="Пароль">
+      <button onclick="checkLogin()">Увійти</button>
+      <p id="error" style="color: red;"></p>
+    </div>
 
-  <table id="complaintsTable" border="1">
-    <thead>
-      <tr>
-        <th>Дата</th><th>Замовлення</th><th>Склад</th><th>Клієнт</th>
-        <th>Категорія</th><th>Статус</th><th>Претензія</th><th>ЗЗ</th>
-        <th>Коментар</th><th>Дії</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Динамічно буде заповнено скриптом -->
-    </tbody>
-  </table>
+    <div id="content" style="display: none;">
+      <label for="filter">🔍 Пошук за клієнтом:</label>
+      <input type="text" id="filter" oninput="filterTable()" placeholder="Введіть ім’я клієнта...">
+      <h2>Скарги:</h2>
+      <table id="complaintsTable" border="1" cellpadding="10">
+        <thead>
+          <tr>
+            <th>Дата</th><th>Замовлення</th><th>Склад</th><th>Клієнт</th>
+            <th>Категорія</th><th>Статус</th><th>Претензія</th><th>ЗЗ</th>
+            <th>Коментар менеджера</th><th>Зберегти</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
 
   <script>
+    let currentUser = "";
+
+    function checkLogin() {
+      const login = document.getElementById("login").value.trim();
+      const password = document.getElementById("password").value.trim();
+      if (
+        (login === "Струпінский Вадим Сергійович" && password === "Вадим101") ||
+        (login === "Тімошкова Юлія Олександрівна" && password === "Юлія101")
+      ) {
+        currentUser = login;
+        document.getElementById("login-box").style.display = "none";
+        document.getElementById("content").style.display = "block";
+        loadComplaints();
+      } else {
+        document.getElementById("error").innerText = "Невірний логін або пароль!";
+      }
+    }
+
+    function loadComplaints() {
+      const data = JSON.parse(localStorage.getItem("complaints") || "[]");
+      const tbody = document.querySelector("#complaintsTable tbody");
+      tbody.innerHTML = "";
+      data.forEach((d, i) => {
+        const isReadonly = d.status === "Закрита" && currentUser === "Тімошкова Юлія Олександрівна";
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${d.date}</td>
+          <td>${d.order}</td>
+          <td>${d.warehouse}</td>
+          <td>${d.client}</td>
+          <td><input type="text" id="category-${i}" value="${d.category}" ${isReadonly ? 'disabled' : ''}></td>
+          <td>
+            <select id="status-${i}" onchange="highlightStatus(this)" ${isReadonly ? 'disabled' : ''}>
+              <option ${d.status === "Відкрита" ? "selected" : ""}>Відкрита</option>
+              <option ${d.status === "В розробці" ? "selected" : ""}>В розробці</option>
+              <option ${d.status === "Закрита" ? "selected" : ""}>Закрита</option>
+              <option ${d.status === "Очікування ЗЗ" ? "selected" : ""}>Очікування ЗЗ</option>
+              <option ${d.status === "ЗЗ наданий" ? "selected" : ""}>ЗЗ наданий</option>
+              <option ${d.status === "На розгляді" ? "selected" : ""}>На розгляді</option>
+              <option ${d.status === "Розглянуто" ? "selected" : ""}>Розглянуто</option>
+              <option ${d.status === "Очікування ЗЗ від КРо" ? "selected" : ""}>Очікування ЗЗ від КРо</option>
+              <option ${d.status === "Розглянути повторно" ? "selected" : ""}>Розглянути повторно</option>
+            </select>
+          </td>
+          <td><textarea readonly>${d.claim}</textarea></td>
+          <td><textarea readonly>${d.zz}</textarea></td>
+          <td><textarea id="comment-${i}" ${isReadonly ? 'readonly' : ''}>${d.managerComment || ""}</textarea></td>
+          <td><button onclick="saveUpdate(${i})" ${isReadonly ? 'disabled' : ''}>💾</button></td>
+        `;
+        tbody.appendChild(row);
+        highlightStatus(document.getElementById(`status-${i}`));
+      });
+    }
+
+    function saveUpdate(index) {
+      const data = JSON.parse(localStorage.getItem("complaints") || "[]");
+      data[index].category = document.getElementById(`category-${index}`).value;
+      data[index].status = document.getElementById(`status-${index}`).value;
+      data[index].managerComment = document.getElementById(`comment-${index}`).value;
+      localStorage.setItem("complaints", JSON.stringify(data));
+      alert("Зміни збережено!");
+      loadComplaints();
+    }
+
+    function highlightStatus(el) {
+      el.style.backgroundColor = el.value === "Закрита" ? "#c4f0c5" : "";
+    }
+
     function filterTable() {
       const filter = document.getElementById("filter").value.toLowerCase();
       const rows = document.querySelectorAll("#complaintsTable tbody tr");
