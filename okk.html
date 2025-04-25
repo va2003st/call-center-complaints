@@ -6,6 +6,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Скарги для ОКК</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    #login-box {
+      max-width: 400px;
+      margin: 50px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    #login-box input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -17,27 +32,54 @@
     </nav>
   </header>
   <main>
-    <table id="complaintsTable" border="1" cellspacing="0" cellpadding="8">
-      <thead>
-        <tr>
-          <th>Дата</th><th>Замовлення</th><th>Склад</th><th>Клієнт</th>
-          <th>Категорія</th><th>Претензія</th><th>Надання ЗЗ</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <div id="login-box">
+      <h3>Вхід для ОКК</h3>
+      <input type="text" id="login" placeholder="Логін">
+      <input type="password" id="password" placeholder="Пароль">
+      <button onclick="checkLogin()">Увійти</button>
+      <p id="error" style="color: red;"></p>
+    </div>
+
+    <div id="content" style="display: none;">
+      <h2>Всі скарги:</h2>
+      <table id="complaintsTable" border="1" cellspacing="0" cellpadding="8">
+        <thead>
+          <tr>
+            <th>Дата</th><th>Замовлення</th><th>Склад</th><th>Клієнт</th>
+            <th>Категорія</th><th>Претензія</th><th>Надання ЗЗ</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </main>
   <footer><p>Створено за допомогою <a href="https://gptonline.ai/">GPTonline.ai</a></p></footer>
+
   <script>
-    const data = JSON.parse(localStorage.getItem("complaints") || "[]");
-    const tbody = document.querySelector("#complaintsTable tbody");
-    data.forEach(d => {{
-      const row = `<tr>
-        <td>${{d.date}}</td><td>${{d.order}}</td><td>${{d.warehouse}}</td>
-        <td>${{d.client}}</td><td>${{d.category}}</td><td>${{d.claim}}</td><td>${{d.zz}}</td>
-      </tr>`;
-      tbody.innerHTML += row;
-    }});
+    function checkLogin() {
+      const login = document.getElementById("login").value.trim();
+      const password = document.getElementById("password").value.trim();
+      if (login === "Струпінский Вадим Сергійович" && password === "Вадим101") {
+        document.getElementById("login-box").style.display = "none";
+        document.getElementById("content").style.display = "block";
+        loadComplaints();
+      } else {
+        document.getElementById("error").innerText = "Невірний логін або пароль!";
+      }
+    }
+
+    function loadComplaints() {
+      const data = JSON.parse(localStorage.getItem("complaints") || "[]");
+      const tbody = document.querySelector("#complaintsTable tbody");
+      tbody.innerHTML = "";
+      data.forEach(d => {
+        const row = `<tr>
+          <td>${d.date}</td><td>${d.order}</td><td>${d.warehouse}</td>
+          <td>${d.client}</td><td>${d.category}</td><td>${d.claim}</td><td>${d.zz}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
   </script>
 </body>
 </html>
