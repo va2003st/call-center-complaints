@@ -48,7 +48,11 @@
   <script>
     document.getElementById("complaintForm").addEventListener("submit", function(e) {
       e.preventDefault();
+      const existing = JSON.parse(localStorage.getItem("complaints") || "[]");
+      const complaintNumber = existing.length + 1;
+
       const data = {
+        id: complaintNumber,
         date: document.getElementById("date").value,
         order: document.getElementById("order").value,
         warehouse: document.getElementById("warehouse").value,
@@ -57,10 +61,10 @@
         claim: document.getElementById("claim").value,
         zz: document.getElementById("zz").value
       };
-      const existing = JSON.parse(localStorage.getItem("complaints") || "[]");
-      existing.push(data);
+
+      existing.unshift(data); // нова скарга додається на початок
       localStorage.setItem("complaints", JSON.stringify(existing));
-      alert("Скаргу збережено! Перейдіть у розділ ОКК для перегляду.");
+      alert("Скаргу збережено! Присвоєно номер: #" + complaintNumber);
       this.reset();
     });
   </script>
