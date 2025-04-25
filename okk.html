@@ -20,6 +20,14 @@
       padding: 10px;
       margin: 10px 0;
     }
+    textarea {
+      width: 100%;
+      height: 60px;
+      margin-top: 5px;
+    }
+    select {
+      width: 100%;
+    }
   </style>
 </head>
 <body>
@@ -46,7 +54,7 @@
         <thead>
           <tr>
             <th>Дата</th><th>Замовлення</th><th>Склад</th><th>Клієнт</th>
-            <th>Категорія</th><th>Претензія</th><th>Надання ЗЗ</th>
+            <th>Категорія (ред.)</th><th>Претензія</th><th>Надання ЗЗ</th><th>Коментар менеджера</th><th>Зберегти</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -72,13 +80,41 @@
       const data = JSON.parse(localStorage.getItem("complaints") || "[]");
       const tbody = document.querySelector("#complaintsTable tbody");
       tbody.innerHTML = "";
-      data.forEach(d => {
-        const row = `<tr>
-          <td>${d.date}</td><td>${d.order}</td><td>${d.warehouse}</td>
-          <td>${d.client}</td><td>${d.category}</td><td>${d.claim}</td><td>${d.zz}</td>
-        </tr>`;
-        tbody.innerHTML += row;
+      data.forEach((d, i) => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${d.date}</td>
+          <td>${d.order}</td>
+          <td>${d.warehouse}</td>
+          <td>${d.client}</td>
+          <td>
+            <select id="category-${i}">
+              <option ${d.category === "Скарга на якість" ? "selected" : ""}>Скарга на якість</option>
+              <option ${d.category === "Скарга на кур'єра" ? "selected" : ""}>Скарга на кур'єра</option>
+              <option ${d.category === "Скарга на КЦ" ? "selected" : ""}>Скарга на КЦ</option>
+              <option ${d.category === "Скарга на комплектацію" ? "selected" : ""}>Скарга на комплектацію</option>
+              <option ${d.category === "Скарга на сервіс" ? "selected" : ""}>Скарга на сервіс</option>
+              <option ${d.category === "Скарга на отруєння" ? "selected" : ""}>Скарга на отруєння</option>
+              <option ${d.category === "Повернення ГК" ? "selected" : ""}>Повернення ГК</option>
+              <option ${d.category === "Інше" ? "selected" : ""}>Інше</option>
+            </select>
+          </td>
+          <td>${d.claim}</td>
+          <td>${d.zz}</td>
+          <td><textarea id="comment-${i}">${d.managerComment || ""}</textarea></td>
+          <td><button onclick="saveUpdate(${i})">💾</button></td>
+        `;
+        tbody.appendChild(row);
       });
+    }
+
+    function saveUpdate(index) {
+      const data = JSON.parse(localStorage.getItem("complaints") || "[]");
+      data[index].category = document.getElementById(`category-${index}`).value;
+      data[index].managerComment = document.getElementById(`comment-${index}`).value;
+      localStorage.setItem("complaints", JSON.stringify(data));
+      alert("Зміни збережено!");
     }
   </script>
 </body>
