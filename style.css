@@ -96,3 +96,15 @@ button {
 button:hover {
   background-color: #218838;
 }
+input[type="date"],
+input[type="text"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.8em;
+  margin-top: 0.3em;
+  margin-bottom: 1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+}

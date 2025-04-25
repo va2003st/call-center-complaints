@@ -46,4 +46,39 @@
     };
   </script>
 </body>
+<form action="#" method="post">
+  <label for="date">Дата:</label>
+  <input type="date" id="date" name="date" required>
+
+  <label for="order">Номер замовлення:</label>
+  <input type="text" id="order" name="order" required>
+
+  <label for="warehouse">Склад:</label>
+  <input type="text" id="warehouse" name="warehouse" required>
+
+  <label for="client">Клієнт:</label>
+  <input type="text" id="client" name="client" required>
+
+  <label for="category">Категорія скарги:</label>
+  <select id="category" name="category" required>
+    <option value="">Оберіть категорію</option>
+    <option>Скарга на якість</option>
+    <option>Скарга на кур'єра</option>
+    <option>Скарга на КЦ</option>
+    <option>Скарга на комплектацію</option>
+    <option>Скарга на сервіс</option>
+    <option>Скарга на отруєння</option>
+    <option>Повернення ГК</option>
+    <option>Інше</option>
+  </select>
+
+  <label for="claim">Претензія:</label>
+  <textarea id="claim" name="claim" required></textarea>
+
+  <label for="zz">Надання ЗЗ:</label>
+  <textarea id="zz" name="zz" required></textarea>
+
+  <button type="submit">Надіслати</button>
+</form>
+
 </html>
