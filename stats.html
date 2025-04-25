@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -5,38 +6,83 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Аналітика</title>
   <link rel="stylesheet" href="style.css">
-  <script>
-    if (localStorage.getItem("theme") === "dark") {
-      document.documentElement.classList.add("dark");
-    }
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <header>
     <h1>Аналітика</h1>
     <nav class="navbar">
       <a class="nav-btn" href="index.html">Головна</a>
-      <a class="nav-btn" href="about.html">Про нас</a>
       <a class="nav-btn" href="complaints.html">Скарги</a>
+      <a class="nav-btn" href="okk.html">ОКК</a>
       <a class="nav-btn" href="stats.html">Аналітика</a>
-      <a class="nav-btn" href="results.html">Результати</a>
-      <a class="nav-btn" href="resources.html">Ресурси</a>
-      <button id="themeToggle" class="theme-toggle">🌙 Тема</button>
     </nav>
   </header>
   <main>
-    <p>Статистика за тиждень, місяць, категоріями звернень.</p>
+    <h2>Категорії скарг (загальна)</h2>
+    <canvas id="categoryChart" width="400" height="400"></canvas>
+
+    <div id="perWarehouse">
+      <h2>Діаграми по складах</h2>
+    </div>
   </main>
-  <footer>
-    <p>&copy; 2025 Відділ контролю якості. Створено за допомогою <a href="https://gptonline.ai/">GPTonline.ai</a></p>
-  </footer>
+  <footer><p>Створено за допомогою <a href="https://gptonline.ai/">GPTonline.ai</a></p></footer>
+
   <script>
-    const toggle = document.getElementById("themeToggle");
-    toggle.onclick = () => {
-      document.documentElement.classList.toggle("dark");
-      localStorage.setItem("theme",
-        document.documentElement.classList.contains("dark") ? "dark" : "light");
-    };
+    const data = JSON.parse(localStorage.getItem("complaints") || "[]");
+
+    // Категорії — кільцева діаграма
+    const categoryCounts = {};
+    const warehouseGroups = {};
+
+    data.forEach(item => {
+      categoryCounts[item.category] = (categoryCounts[item.category] || 0) + 1;
+      if (!warehouseGroups[item.warehouse]) warehouseGroups[item.warehouse] = [];
+      warehouseGroups[item.warehouse].push(item);
+    });
+
+    const ctx = document.getElementById('categoryChart');
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(categoryCounts),
+        datasets: [{
+          label: 'Категорії',
+          data: Object.values(categoryCounts),
+          backgroundColor: [
+            '#007bff', '#28a745', '#ffc107', '#dc3545',
+            '#6f42c1', '#17a2b8', '#fd7e14', '#20c997'
+          ]
+        }]
+      }
+    });
+
+    // Діаграми по кожному складу
+    const perWarehouse = document.getElementById("perWarehouse");
+    Object.keys(warehouseGroups).forEach((wh, index) => {
+      const group = warehouseGroups[wh];
+      const byCategory = {};
+      group.forEach(d => {
+        byCategory[d.category] = (byCategory[d.category] || 0) + 1;
+      });
+
+      const canvasId = "chart" + index;
+      const block = document.createElement("div");
+      block.innerHTML = `<h3>Склад: ${wh}</h3><canvas id="${canvasId}" width="400" height="300"></canvas>`;
+      perWarehouse.appendChild(block);
+
+      new Chart(document.getElementById(canvasId), {
+        type: 'bar',
+        data: {
+          labels: Object.keys(byCategory),
+          datasets: [{
+            label: 'Скарги',
+            data: Object.values(byCategory),
+            backgroundColor: '#007bff'
+          }]
+        }
+      });
+    });
   </script>
 </body>
 </html>
