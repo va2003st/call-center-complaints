@@ -22,8 +22,7 @@
     }
     textarea {
       width: 100%;
-      resize: vertical;
-      min-height: 60px;
+      height: 60px;
       margin-top: 5px;
     }
     select {
@@ -101,8 +100,8 @@
               <option ${d.category === "Інше" ? "selected" : ""}>Інше</option>
             </select>
           </td>
-          <td><textarea readonly>${d.claim}</textarea></td>
-          <td><textarea readonly>${d.zz}</textarea></td>
+          <td>${d.claim}</td>
+          <td>${d.zz}</td>
           <td><textarea id="comment-${i}">${d.managerComment || ""}</textarea></td>
           <td><button onclick="saveUpdate(${i})">💾</button></td>
         `;
