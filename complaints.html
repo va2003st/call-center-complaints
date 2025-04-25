@@ -48,11 +48,13 @@
   <script>
     document.getElementById("complaintForm").addEventListener("submit", function(e) {
       e.preventDefault();
-      const existing = JSON.parse(localStorage.getItem("complaints") || "[]");
-      const complaintNumber = existing.length + 1;
+
+      let idCounter = localStorage.getItem("complaintCounter") || "0";
+      idCounter = parseInt(idCounter) + 1;
+      localStorage.setItem("complaintCounter", idCounter);
 
       const data = {
-        id: complaintNumber,
+        id: idCounter,
         date: document.getElementById("date").value,
         order: document.getElementById("order").value,
         warehouse: document.getElementById("warehouse").value,
@@ -62,9 +64,10 @@
         zz: document.getElementById("zz").value
       };
 
-      existing.unshift(data); // нова скарга додається на початок
+      const existing = JSON.parse(localStorage.getItem("complaints") || "[]");
+      existing.unshift(data);
       localStorage.setItem("complaints", JSON.stringify(existing));
-      alert("Скаргу збережено! Присвоєно номер: #" + complaintNumber);
+      alert("Скаргу збережено! Присвоєно номер: #" + idCounter);
       this.reset();
     });
   </script>
