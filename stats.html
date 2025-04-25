@@ -7,6 +7,21 @@
   <title>Аналітика</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    #login-box {
+      max-width: 400px;
+      margin: 50px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    #login-box input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -19,70 +34,92 @@
     </nav>
   </header>
   <main>
-    <h2>Категорії скарг (загальна)</h2>
-    <canvas id="categoryChart" width="400" height="400"></canvas>
+    <div id="login-box">
+      <h3>Вхід для перегляду аналітики</h3>
+      <input type="text" id="login" placeholder="Логін">
+      <input type="password" id="password" placeholder="Пароль">
+      <button onclick="checkLogin()">Увійти</button>
+      <p id="error" style="color: red;"></p>
+    </div>
 
-    <div id="perWarehouse">
-      <h2>Діаграми по складах</h2>
+    <div id="content" style="display: none;">
+      <h2>Категорії скарг (загальна)</h2>
+      <canvas id="categoryChart" width="400" height="400"></canvas>
+
+      <div id="perWarehouse">
+        <h2>Діаграми по складах</h2>
+      </div>
     </div>
   </main>
   <footer><p>Створено за допомогою <a href="https://gptonline.ai/">GPTonline.ai</a></p></footer>
 
   <script>
-    const data = JSON.parse(localStorage.getItem("complaints") || "[]");
-
-    // Категорії — кільцева діаграма
-    const categoryCounts = {};
-    const warehouseGroups = {};
-
-    data.forEach(item => {
-      categoryCounts[item.category] = (categoryCounts[item.category] || 0) + 1;
-      if (!warehouseGroups[item.warehouse]) warehouseGroups[item.warehouse] = [];
-      warehouseGroups[item.warehouse].push(item);
-    });
-
-    const ctx = document.getElementById('categoryChart');
-    new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: Object.keys(categoryCounts),
-        datasets: [{
-          label: 'Категорії',
-          data: Object.values(categoryCounts),
-          backgroundColor: [
-            '#007bff', '#28a745', '#ffc107', '#dc3545',
-            '#6f42c1', '#17a2b8', '#fd7e14', '#20c997'
-          ]
-        }]
+    function checkLogin() {
+      const login = document.getElementById("login").value.trim();
+      const password = document.getElementById("password").value.trim();
+      if (login === "Струпінский Вадим Сергійович" && password === "Вадим101") {
+        document.getElementById("login-box").style.display = "none";
+        document.getElementById("content").style.display = "block";
+        loadAnalytics();
+      } else {
+        document.getElementById("error").innerText = "Невірний логін або пароль!";
       }
-    });
+    }
 
-    // Діаграми по кожному складу
-    const perWarehouse = document.getElementById("perWarehouse");
-    Object.keys(warehouseGroups).forEach((wh, index) => {
-      const group = warehouseGroups[wh];
-      const byCategory = {};
-      group.forEach(d => {
-        byCategory[d.category] = (byCategory[d.category] || 0) + 1;
+    function loadAnalytics() {
+      const data = JSON.parse(localStorage.getItem("complaints") || "[]");
+
+      const categoryCounts = {};
+      const warehouseGroups = {};
+
+      data.forEach(item => {
+        categoryCounts[item.category] = (categoryCounts[item.category] || 0) + 1;
+        if (!warehouseGroups[item.warehouse]) warehouseGroups[item.warehouse] = [];
+        warehouseGroups[item.warehouse].push(item);
       });
 
-      const canvasId = "chart" + index;
-      const block = document.createElement("div");
-      block.innerHTML = `<h3>Склад: ${wh}</h3><canvas id="${canvasId}" width="400" height="300"></canvas>`;
-      perWarehouse.appendChild(block);
-
-      new Chart(document.getElementById(canvasId), {
-        type: 'bar',
+      const ctx = document.getElementById('categoryChart');
+      new Chart(ctx, {
+        type: 'doughnut',
         data: {
-          labels: Object.keys(byCategory),
+          labels: Object.keys(categoryCounts),
           datasets: [{
-            label: 'Скарги',
-            data: Object.values(byCategory),
-            backgroundColor: '#007bff'
+            label: 'Категорії',
+            data: Object.values(categoryCounts),
+            backgroundColor: [
+              '#007bff', '#28a745', '#ffc107', '#dc3545',
+              '#6f42c1', '#17a2b8', '#fd7e14', '#20c997'
+            ]
           }]
         }
       });
-    });
+
+      const perWarehouse = document.getElementById("perWarehouse");
+      Object.keys(warehouseGroups).forEach((wh, index) => {
+        const group = warehouseGroups[wh];
+        const byCategory = {};
+        group.forEach(d => {
+          byCategory[d.category] = (byCategory[d.category] || 0) + 1;
+        });
+
+        const canvasId = "chart" + index;
+        const block = document.createElement("div");
+        block.innerHTML = `<h3>Склад: ${wh}</h3><canvas id="${canvasId}" width="400" height="300"></canvas>`;
+        perWarehouse.appendChild(block);
+
+        new Chart(document.getElementById(canvasId), {
+          type: 'bar',
+          data: {
+            labels: Object.keys(byCategory),
+            datasets: [{
+              label: 'Скарги',
+              data: Object.values(byCategory),
+              backgroundColor: '#007bff'
+            }]
+          }
+        });
+      });
+    }
   </script>
 </body>
 </html>
