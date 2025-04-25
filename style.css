@@ -1,4 +1,3 @@
-
 :root {
   --bg: #f8f9fa;
   --text: #333;
@@ -13,6 +12,7 @@
   --nav-bg: #2c2c2c;
   --hover: #00e1ff;
 }
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
@@ -21,12 +21,14 @@ body {
   color: var(--text);
   transition: background-color 0.4s, color 0.4s;
 }
+
 header {
   background-color: var(--accent);
   color: white;
   padding: 1.5em 0;
   text-align: center;
 }
+
 .navbar {
   display: flex;
   justify-content: center;
@@ -34,6 +36,7 @@ header {
   gap: 10px;
   margin-top: 15px;
 }
+
 .nav-btn {
   background-color: var(--nav-bg);
   color: var(--accent);
@@ -44,12 +47,14 @@ header {
   border: 2px solid var(--accent);
   transition: all 0.3s ease;
 }
+
 .nav-btn:hover {
   background-color: var(--accent);
   color: var(--nav-bg);
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
+
 .theme-toggle {
   background-color: transparent;
   color: var(--accent);
@@ -58,11 +63,13 @@ header {
   border-radius: 5px;
   cursor: pointer;
 }
+
 main {
   padding: 2em;
   max-width: 900px;
   margin: auto;
 }
+
 footer {
   text-align: center;
   padding: 1.5em 0;
@@ -74,16 +81,41 @@ footer a {
   color: var(--accent);
   text-decoration: none;
 }
-input, textarea {
+
+form {
+  background-color: var(--nav-bg);
+  padding: 1.5em;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+label {
+  display: block;
+  margin-top: 1em;
+  font-weight: bold;
+}
+
+input[type="date"],
+input[type="text"],
+input[type="email"],
+select,
+textarea {
   width: 100%;
   padding: 0.8em;
   margin-top: 0.3em;
+  margin-bottom: 1em;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 1em;
+  background-color: white;
 }
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
 button {
-  margin-top: 1em;
   background-color: #28a745;
   color: white;
   border: none;
@@ -95,16 +127,4 @@ button {
 }
 button:hover {
   background-color: #218838;
-}
-input[type="date"],
-input[type="text"],
-select,
-textarea {
-  width: 100%;
-  padding: 0.8em;
-  margin-top: 0.3em;
-  margin-bottom: 1em;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1em;
 }

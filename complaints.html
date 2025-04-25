@@ -24,19 +24,50 @@
       <button id="themeToggle" class="theme-toggle">🌙 Тема</button>
     </nav>
   </header>
+
   <main>
-    <p>Тут ви можете залишити скаргу або звернення.</p>
-<form action="#" method="post">
-  <label for="name">Ваше ім’я:</label>
-  <input type="text" id="name" name="name" required>
-  <label for="message">Опис скарги:</label>
-  <textarea id="message" name="message" required></textarea>
-  <button type="submit">Надіслати</button>
-</form>
+    <p>Будь ласка, заповніть всі обов’язкові поля:</p>
+
+    <form action="#" method="post">
+      <label for="date">Дата:</label>
+      <input type="date" id="date" name="date" required>
+
+      <label for="order">Номер замовлення:</label>
+      <input type="text" id="order" name="order" required>
+
+      <label for="warehouse">Склад:</label>
+      <input type="text" id="warehouse" name="warehouse" required>
+
+      <label for="client">Клієнт:</label>
+      <input type="text" id="client" name="client" required>
+
+      <label for="category">Категорія скарги:</label>
+      <select id="category" name="category" required>
+        <option value="">Оберіть категорію</option>
+        <option>Скарга на якість</option>
+        <option>Скарга на кур'єра</option>
+        <option>Скарга на КЦ</option>
+        <option>Скарга на комплектацію</option>
+        <option>Скарга на сервіс</option>
+        <option>Скарга на отруєння</option>
+        <option>Повернення ГК</option>
+        <option>Інше</option>
+      </select>
+
+      <label for="claim">Претензія:</label>
+      <textarea id="claim" name="claim" required></textarea>
+
+      <label for="zz">Надання ЗЗ:</label>
+      <textarea id="zz" name="zz" required></textarea>
+
+      <button type="submit">Надіслати</button>
+    </form>
   </main>
+
   <footer>
     <p>&copy; 2025 Відділ контролю якості. Створено за допомогою <a href="https://gptonline.ai/">GPTonline.ai</a></p>
   </footer>
+
   <script>
     const toggle = document.getElementById("themeToggle");
     toggle.onclick = () => {
@@ -46,39 +77,4 @@
     };
   </script>
 </body>
-<form action="#" method="post">
-  <label for="date">Дата:</label>
-  <input type="date" id="date" name="date" required>
-
-  <label for="order">Номер замовлення:</label>
-  <input type="text" id="order" name="order" required>
-
-  <label for="warehouse">Склад:</label>
-  <input type="text" id="warehouse" name="warehouse" required>
-
-  <label for="client">Клієнт:</label>
-  <input type="text" id="client" name="client" required>
-
-  <label for="category">Категорія скарги:</label>
-  <select id="category" name="category" required>
-    <option value="">Оберіть категорію</option>
-    <option>Скарга на якість</option>
-    <option>Скарга на кур'єра</option>
-    <option>Скарга на КЦ</option>
-    <option>Скарга на комплектацію</option>
-    <option>Скарга на сервіс</option>
-    <option>Скарга на отруєння</option>
-    <option>Повернення ГК</option>
-    <option>Інше</option>
-  </select>
-
-  <label for="claim">Претензія:</label>
-  <textarea id="claim" name="claim" required></textarea>
-
-  <label for="zz">Надання ЗЗ:</label>
-  <textarea id="zz" name="zz" required></textarea>
-
-  <button type="submit">Надіслати</button>
-</form>
-
 </html>
