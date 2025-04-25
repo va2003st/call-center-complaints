@@ -1,79 +1,79 @@
-/* Загальні стилі */
+
+:root {
+  --bg: #f8f9fa;
+  --text: #333;
+  --accent: #0056b3;
+  --nav-bg: #ffffff;
+  --hover: #ffd700;
+}
+.dark {
+  --bg: #1e1e1e;
+  --text: #f1f1f1;
+  --accent: #0099ff;
+  --nav-bg: #2c2c2c;
+  --hover: #00e1ff;
+}
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f8f9fa;
-  color: #333;
-  line-height: 1.6;
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.4s, color 0.4s;
 }
-
-/* Хедер */
 header {
-  background-color: #0056b3;
+  background-color: var(--accent);
   color: white;
   padding: 1.5em 0;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
-header h1 {
-  margin: 0;
-  font-size: 2em;
+.navbar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
 }
-
-/* Меню */
-nav {
-  margin-top: 1em;
-}
-
-nav a {
-  color: white;
-  margin: 0 1em;
+.nav-btn {
+  background-color: var(--nav-bg);
+  color: var(--accent);
+  padding: 10px 18px;
   text-decoration: none;
   font-weight: bold;
-  transition: color 0.3s;
+  border-radius: 5px;
+  border: 2px solid var(--accent);
+  transition: all 0.3s ease;
 }
-
-nav a:hover {
-  color: #ffd700;
+.nav-btn:hover {
+  background-color: var(--accent);
+  color: var(--nav-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
-
-/* Основна частина */
+.theme-toggle {
+  background-color: transparent;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
 main {
   padding: 2em;
   max-width: 900px;
   margin: auto;
-  background-color: #ffffff;
-  box-shadow: 0 0 10px rgba(0,0,0,0.05);
-  border-radius: 8px;
 }
-
-/* Секції */
-section {
-  margin-bottom: 3em;
+footer {
+  text-align: center;
+  padding: 1.5em 0;
+  background-color: #e9ecef;
+  color: #666;
+  margin-top: 2em;
 }
-
-h2 {
-  border-left: 4px solid #0056b3;
-  padding-left: 10px;
-  color: #0056b3;
+footer a {
+  color: var(--accent);
+  text-decoration: none;
 }
-
-/* Форма */
-form {
-  margin-top: 1em;
-  background-color: #f1f1f1;
-  padding: 1em;
-  border-radius: 8px;
-}
-
-label {
-  display: block;
-  margin-top: 1em;
-  font-weight: bold;
-}
-
 input, textarea {
   width: 100%;
   padding: 0.8em;
@@ -82,12 +82,6 @@ input, textarea {
   border-radius: 4px;
   font-size: 1em;
 }
-
-textarea {
-  resize: vertical;
-  min-height: 120px;
-}
-
 button {
   margin-top: 1em;
   background-color: #28a745;
@@ -99,27 +93,6 @@ button {
   cursor: pointer;
   transition: background-color 0.3s;
 }
-
 button:hover {
   background-color: #218838;
-}
-
-/* Список */
-ul {
-  list-style-type: disc;
-  padding-left: 1.5em;
-}
-
-/* Футер */
-footer {
-  text-align: center;
-  padding: 1.5em 0;
-  background-color: #e9ecef;
-  color: #666;
-  margin-top: 2em;
-}
-
-footer a {
-  color: #007bff;
-  text-decoration: none;
 }
