@@ -28,6 +28,7 @@
       <input type="text" id="client" required>
       <label>Категорія скарги:</label>
       <select id="category" required>
+        <option value="">Оберіть категорію</option>
         <option>Скарга на якість</option>
         <option>Скарга на кур'єра</option>
         <option>Скарга на КЦ</option>
@@ -45,16 +46,19 @@
     </form>
   </main>
   <footer><p>Створено за допомогою <a href="https://gptonline.ai/">GPTonline.ai</a></p></footer>
+
   <script>
     document.getElementById("complaintForm").addEventListener("submit", function(e) {
       e.preventDefault();
 
-      let idCounter = localStorage.getItem("complaintCounter") || "0";
-      idCounter = parseInt(idCounter) + 1;
-      localStorage.setItem("complaintCounter", idCounter);
+      // Отримуємо існуючий лічильник
+      let currentNumber = parseInt(localStorage.getItem("complaintCounter") || "0");
+      currentNumber += 1;
+      localStorage.setItem("complaintCounter", currentNumber);
 
+      // Формуємо нову скаргу
       const data = {
-        id: idCounter,
+        id: currentNumber,
         date: document.getElementById("date").value,
         order: document.getElementById("order").value,
         warehouse: document.getElementById("warehouse").value,
@@ -64,10 +68,12 @@
         zz: document.getElementById("zz").value
       };
 
-      const existing = JSON.parse(localStorage.getItem("complaints") || "[]");
-      existing.unshift(data);
-      localStorage.setItem("complaints", JSON.stringify(existing));
-      alert("Скаргу збережено! Присвоєно номер: #" + idCounter);
+      // Зберігаємо у LocalStorage
+      const all = JSON.parse(localStorage.getItem("complaints") || "[]");
+      all.unshift(data); // додаємо в початок
+      localStorage.setItem("complaints", JSON.stringify(all));
+
+      alert("Скаргу збережено! Номер скарги: #" + currentNumber);
       this.reset();
     });
   </script>
