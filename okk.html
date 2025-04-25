@@ -59,7 +59,7 @@
         <thead>
           <tr>
             <th>Дата</th><th>Замовлення</th><th>Склад</th><th>Клієнт</th>
-            <th>Категорія (ред.)</th><th>Претензія</th><th>Надання ЗЗ</th><th>Коментар менеджера</th><th>Зберегти</th>
+            <th>Категорія (ред.)</th><th>Претензія</th><th>Надання ЗЗ</th><th>Статус</th><th>Коментар менеджера</th><th>Зберегти</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -125,9 +125,19 @@
       });
     }
 
+    
+    function updateStatusColor(select) {
+      if (select.value === "Закрита") {
+        select.style.backgroundColor = "#c4f0c5"; // зелений
+      } else {
+        select.style.backgroundColor = "";
+      }
+    }
+
     function saveUpdate(index) {
       const data = JSON.parse(localStorage.getItem("complaints") || "[]");
       data[index].category = document.getElementById(`category-${index}`).value;
+      data[index].status = document.getElementById(`status-${index}`).value;
       data[index].managerComment = document.getElementById(`comment-${index}`).value;
       localStorage.setItem("complaints", JSON.stringify(data));
       alert("Зміни збережено!");
