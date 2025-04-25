@@ -70,11 +70,13 @@
   </footer>
 
   <script>
+    let currentUser = "";
     function checkLogin() {
       const login = document.getElementById("login").value.trim();
       const password = document.getElementById("password").value.trim();
       if (login === "Струпінский Вадим Сергійович" && password === "Вадим101") {
         document.getElementById("login-box").style.display = "none";
+        currentUser = login;
         document.getElementById("content").style.display = "block";
         loadComplaints();
       } else {
@@ -87,6 +89,11 @@
       const tbody = document.querySelector("#complaintsTable tbody");
       tbody.innerHTML = "";
       data.forEach((d, i) => {
+
+        const isReadonly = d.status === "Закрита" && currentUser === "Тімошкова Юлія Олександрівна";
+        const disabledAttr = isReadonly ? "disabled" : "";
+        const readonlyAttr = isReadonly ? "readonly" : "";
+
         const row = document.createElement("tr");
 
         row.innerHTML = `
@@ -95,7 +102,7 @@
           <td>${d.warehouse}</td>
           <td>${d.client}</td>
           <td>
-            <select id="category-${i}">
+            <select id="category-${i}" ${disabledAttr}>
               <option ${d.category === "Скарга на якість" ? "selected" : ""}>Скарга на якість</option>
               <option ${d.category === "Скарга на кур'єра" ? "selected" : ""}>Скарга на кур'єра</option>
               <option ${d.category === "Скарга на КЦ" ? "selected" : ""}>Скарга на КЦ</option>
@@ -107,7 +114,7 @@
             </select>
           </td>
           <td>
-            <select id="status-${i}" onchange="updateStatusColor(this)">
+            <select id="status-${i}" onchange="updateStatusColor(this)" ${disabledAttr}>
               <option ${d.status === "Відкрита" ? "selected" : ""}>Відкрита</option>
               <option ${d.status === "В розробці" ? "selected" : ""}>В розробці</option>
               <option ${d.status === "Закрита" ? "selected" : ""}>Закрита</option>
@@ -121,8 +128,8 @@
           </td>
           <td><textarea readonly>${d.claim}</textarea></td>
           <td><textarea readonly>${d.zz}</textarea></td>
-          <td><textarea id="comment-${i}">${d.managerComment || ""}</textarea></td>
-          <td><button onclick="saveUpdate(${i})">💾</button></td>
+          <td><textarea id="comment-${i}" ${readonlyAttr}>${d.managerComment || ""}</textarea></td>
+          <td><button onclick="saveUpdate(${i})" ${disabledAttr}>💾</button></td>
         `;
 
         tbody.appendChild(row);
