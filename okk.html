@@ -72,17 +72,17 @@
   <script>
     let currentUser = "";
     function checkLogin() {
-      const login = document.getElementById("login").value.trim();
-      const password = document.getElementById("password").value.trim();
-      if (login === "Струпінский Вадим Сергійович" && password === "Вадим101") {
-        document.getElementById("login-box").style.display = "none";
+      if (
+        (login === "Струпінский Вадим Сергійович" && password === "Вадим101") ||
+        (login === "Тімошкова Юлія Олександрівна" && password === "Юлія101")
+      ) {
         currentUser = login;
+        document.getElementById("login-box").style.display = "none";
         document.getElementById("content").style.display = "block";
         loadComplaints();
       } else {
         document.getElementById("error").innerText = "Невірний логін або пароль!";
       }
-    }
 
     function loadComplaints() {
       const data = JSON.parse(localStorage.getItem("complaints") || "[]");
